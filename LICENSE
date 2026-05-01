@@ -1,0 +1,79 @@
+Apache License
+Version 2.0, January 2004
+
+TERMS AND CONDITIONS FOR USE, REPRODUCTION, AND DISTRIBUTION
+
+1. Definitions.
+
+   "License" shall mean the terms and conditions for use, reproduction, and distribution as defined by Sections 1 through 9 of this document.
+
+   "Licensor" shall mean the copyright owner or entity authorized by the copyright owner that is granting the License.
+
+   "Legal Entity" shall mean the union of the acting entity and all other entities that control, are controlled by, or are under common control with that entity.
+
+   "You" (or "Your") shall mean an individual or Legal Entity exercising permissions granted by this License.
+
+   "Source" form shall mean the preferred form for making modifications, including but not limited to software source code, documentation source, and configuration files.
+
+   "Object" form shall mean any form resulting from mechanical transformation or translation of a Source form, including but not limited to compiled computer programs, generated documentation, and conversions to other media types.
+
+   "Contribution" shall mean any work of authorship, including the original version of the Work and any modifications or additions to that Work or any previous Contributions to that Work.
+
+   "Contributors" shall mean the individuals or Legal Entities on the official contributor list maintained by the Licensor that have made Contributions to the Work.
+
+   "Patents" shall mean any patent claims of the Contributor, including without limitation, method, process, and apparatus claims.
+
+   "Redistribution" shall mean any form of distribution of the Work or Derivative Works therefrom.
+
+   "Derivate Works" shall mean any work, whether in Source or Object form, that is based on (or derived from) the Work or any part thereof.
+
+   "Use" shall mean to use, reproduce, modify, display, distribute, or publicly perform the Work.
+
+2. License Grant.
+
+   (a) Subject to the terms and conditions of this License, each Contributor hereby grants to You a perpetual, worldwide, royalty-free, non-exclusive license to use, reproduce, update, modify, translate, display, distribute, and publicly perform the Work, and Derivative Works thereof, and to authorize others to do the same.
+
+   (b) Each Contributor grants to You a perpetual, worldwide, royalty-free, non-exclusive license under the Contributor's Patents to make, use, sell, offer for sale, import, and otherwise transfer the Work, and Derivative Works thereof, in any format.
+
+3. Conditions.
+
+   The licenses granted in Section 2 are subject to the following conditions:
+
+   (a) You must include a copy of this License with the Work when you distribute it.
+
+   (b) You must not use the trademark or trade name of the Licensor, except as required to comply with the notices in this License.
+
+   (c) You must not remove or alter any copyright notices or other proprietary notices contained in the Work.
+
+   (d) If You distribute the Work or Derivative Works thereof, you must provide the recipients with the same rights that you received under this License.
+
+   (e) You must include a copy of this License with the Work, along with any accompanying documentation.
+
+   (f) You shall not impose any further restrictions on the exercise of the rights granted or conveyed by this License.
+
+4. Acceptance.
+
+   You accept and agree to be bound by the terms of this License by copying, modifying, or distributing the Work (or any work based on the Work).
+
+5. Disclaimer of Warranty.
+
+   Unless required by applicable law or agreed to in writing, Licensor provides the Work (and each Contributor provides its Contributions) on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied, including, but not limited to, any warranties or conditions of TITLE, NON-INFRINGEMENT, MERCHANTABILITY, or FITNESS FOR A PARTICULAR PURPOSE. You are solely responsible for determining the appropriateness of using or redistributing the Work and assume any risks associated with Your exercise of permissions under this License.
+
+6. Limitation of Liability.
+
+   In no event and under no legal theory, whether in tort (including negligence), contract, or otherwise, unless required by applicable law (such as deliberate and grossly negligent acts) or agreed to in writing, shall any Contributor be liable to You for damages, including any direct, indirect, special, incidental, or consequential damages of any character arising as a result of this License or out of the use or inability to use the Work (including but not limited to damages for loss of goodwill, work stoppage, computer failure or malfunction, or any and all other commercial damages or losses), even if such Contributor has been advised of the possibility of such damages.
+
+7. Termination.
+
+   This License and the rights granted hereunder will terminate automatically if You fail to comply with the terms of this License. However, if You become aware of any violation of this License, You shall have the right to cure the violation within thirty (30) days after becoming aware of it. Upon failure to cure such violation within the specified time, your rights under this License will terminate automatically.
+
+8. Other Billings.
+
+   You may not redistribute this License. Therefore, all Licenses are granted simultaneously and coherently. The Apache License version 2.0 shall govern the works created by the Licensor under this License.
+
+9. Accepting Warranty or Additional Liability.
+
+   While redistributing the work, you may choose to offer warranty protection. Your warranty must be provided along with a statement of additional terms under this License. This statement may not reduce other warranties provided under this License, nor may it contribute to adding burden to such provisions.
+
+
+END OF TERMS AND CONDITIONS
