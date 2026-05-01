@@ -1,4 +1,3 @@
-import React from 'react';
 import { useAuth } from '../context/AuthContext';
 import { Compass, CheckCircle2, Globe, MapPin } from 'lucide-react';
 

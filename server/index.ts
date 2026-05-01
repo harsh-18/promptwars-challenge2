@@ -146,7 +146,7 @@ if (isProd) {
 const start = async () => {
   try {
     const port = Number(process.env.PORT) || 8080;
-    await server.listen({ port, host: '127.0.0.1' });
+    await server.listen({ port, host: '0.0.0.0' });
     console.log(`Server listening at http://localhost:${port}`);
   } catch (err) {
     server.log.error(err);

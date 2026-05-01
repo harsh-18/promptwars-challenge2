@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
-import { ShieldCheck, LogIn, UserPlus, Globe, CheckCircle2 } from 'lucide-react';
+import { ShieldCheck, LogIn, UserPlus, Globe } from 'lucide-react';
 
 export function Login() {
   const [activeTab, setActiveTab] = useState<'signin' | 'signup'>('signin');

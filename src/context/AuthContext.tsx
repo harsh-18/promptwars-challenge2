@@ -10,6 +10,9 @@ interface User {
   firstTimeVoter?: boolean;
   movedRecently?: boolean;
   country?: string;
+  gender?: string;
+  phoneNumber?: string;
+  bio?: string;
 }
 
 interface AuthContextType {

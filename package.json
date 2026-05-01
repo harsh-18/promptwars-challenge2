@@ -7,7 +7,7 @@
     "dev:ui": "vite",
     "dev:api": "tsx watch server/index.ts",
     "dev": "concurrently \"npm run dev:api\" \"npm run dev:ui\"",
-    "build:ui": "tsc -b && vite build",
+    "build:ui": "vite build",
     "build:api": "tsc --project tsconfig.server.json",
     "build": "npm run build:ui && npm run build:api",
     "start": "node dist-server/index.js",
