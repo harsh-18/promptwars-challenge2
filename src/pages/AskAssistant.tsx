@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { useLocation } from 'react-router-dom';
+import { useAuth } from '../context/AuthContext';
 import { Send, Bot, User, ShieldAlert } from 'lucide-react';
 
 interface ChatMessage {
@@ -9,19 +10,35 @@ interface ChatMessage {
 }
 
 export function AskAssistant() {
+  const { user } = useAuth();
   const location = useLocation();
+
+  const [selectedCountry, setSelectedCountry] = useState<'India' | 'United States'>(
+    (user?.country as 'India' | 'United States') || 'India'
+  );
+
   const [messages, setMessages] = useState<ChatMessage[]>([
     {
       id: 'welcome',
       sender: 'assistant',
-      text: 'Hello! I am your CivicGuide Assistant. I provide nonpartisan, official election information grounded in direct ECI source data. Ask me anything about voter registration, the polling process, or required documentation.'
+      text: `Hello! I am your CivicGuide Assistant. I provide nonpartisan, official election information grounded in direct official source data for ${selectedCountry || 'India'}. Ask me anything about voter registration, the polling process, or required documentation.`
     }
   ]);
   const [input, setInput] = useState('');
   const [loading, setLoading] = useState(false);
 
-  // Read user profile passed via router state or intake form if available
-  const userProfile = location.state?.profile || null;
+  const userProfile = location.state?.profile || user || null;
+
+  const handleCountryChange = (country: 'India' | 'United States') => {
+    setSelectedCountry(country);
+    setMessages([
+      {
+        id: 'welcome_' + Date.now(),
+        sender: 'assistant',
+        text: `Hello! I am your CivicGuide Assistant. I provide nonpartisan, official election information grounded in direct official source data for ${country}. Ask me anything about voter registration, the polling process, or required documentation.`
+      }
+    ]);
+  };
 
   const handleSend = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -37,20 +54,23 @@ export function AskAssistant() {
     setInput('');
     setLoading(true);
 
+    // Dynamic country override injected directly to the profile object
+    const finalProfile = userProfile ? { ...userProfile, country: selectedCountry } : { country: selectedCountry };
+
     try {
       let response;
       try {
         response = await fetch('/api/chat', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ message: userMsg.text, profile: userProfile })
+          body: JSON.stringify({ message: userMsg.text, profile: finalProfile })
         });
       } catch (localErr) {
         console.warn('Vite proxy fetch failed, falling back to direct server URI', localErr);
         response = await fetch('http://127.0.0.1:8080/api/chat', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ message: userMsg.text, profile: userProfile })
+          body: JSON.stringify({ message: userMsg.text, profile: finalProfile })
         });
       }
 
@@ -84,14 +104,41 @@ export function AskAssistant() {
 
   return (
     <div className="card" style={{ maxWidth: '800px', margin: '0 auto', display: 'flex', flexDirection: 'column', height: 'calc(100vh - 180px)', maxHeight: '700px' }}>
-      <div style={{ borderBottom: '1px solid var(--color-border)', paddingBottom: '1rem', marginBottom: '1rem' }}>
-        <h2 style={{ margin: '0 0 0.5rem 0', display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
-          <Bot color="var(--color-primary)" /> AI Civic Assistant
-        </h2>
-        <div style={{ display: 'flex', gap: '1rem', alignItems: 'center', backgroundColor: '#fdf6e2', border: '1px solid #f9ebc4', padding: '0.5rem 1rem', borderRadius: '4px', fontSize: '0.85rem' }}>
-          <ShieldAlert size={16} color="#b7791f" style={{ flexShrink: 0 }} />
-          <span>We strictly adhere to official, nonpartisan guidance. The assistant does not endorse any candidate or political party.</span>
+      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', borderBottom: '1px solid var(--color-border)', paddingBottom: '1rem', marginBottom: '1rem', flexWrap: 'wrap', gap: '1rem' }}>
+        <div>
+          <h2 style={{ margin: '0 0 0.5rem 0', display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+            <Bot color="var(--color-primary)" /> AI Civic Assistant
+          </h2>
+          <p style={{ margin: 0, fontSize: '0.9rem', color: 'var(--color-text-light)' }}>
+            Empowering voters in <strong>{selectedCountry}</strong>.
+          </p>
         </div>
+        <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
+          <span style={{ fontSize: '0.875rem', fontWeight: 500, color: 'var(--color-text)' }}>Country:</span>
+          <select
+            value={selectedCountry}
+            onChange={(e) => handleCountryChange(e.target.value as any)}
+            style={{
+              padding: '0.45rem 0.75rem',
+              borderRadius: '20px',
+              border: '1px solid var(--color-border)',
+              backgroundColor: '#fff',
+              fontSize: '0.85rem',
+              fontWeight: 500,
+              color: 'var(--color-text)',
+              cursor: 'pointer',
+              outline: 'none'
+            }}
+          >
+            <option value="India">India</option>
+            <option value="United States">United States</option>
+          </select>
+        </div>
+      </div>
+
+      <div style={{ display: 'flex', gap: '1rem', alignItems: 'center', backgroundColor: '#fdf6e2', border: '1px solid #f9ebc4', padding: '0.5rem 1rem', borderRadius: '4px', fontSize: '0.85rem', marginBottom: '1rem' }}>
+        <ShieldAlert size={16} color="#b7791f" style={{ flexShrink: 0 }} />
+        <span>We strictly adhere to official, nonpartisan guidance. The assistant does not endorse any candidate or political party.</span>
       </div>
 
       <div style={{ flex: 1, overflowY: 'auto', padding: '1rem', display: 'flex', flexDirection: 'column', gap: '1.25rem', backgroundColor: '#fafafa', borderRadius: '8px', border: '1px solid var(--color-border)', marginBottom: '1rem' }}>

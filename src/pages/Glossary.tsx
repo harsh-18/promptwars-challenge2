@@ -85,14 +85,18 @@ const ALL_TERMS: GlossaryTerm[] = [
 
 export function Glossary() {
   const { user } = useAuth();
-  const userCountry = user?.country || 'India';
+  
+  // Dynamic override on state
+  const [selectedCountry, setSelectedCountry] = useState<'India' | 'United States'>(
+    (user?.country as 'India' | 'United States') || 'India'
+  );
 
   const [searchTerm, setSearchTerm] = useState('');
   const [activeCategory, setActiveCategory] = useState('All');
 
-  // Filter terms by logged-in user country or terms that apply to both
+  // Filter terms by dynamic override state
   const countryTerms = ALL_TERMS.filter(
-    t => t.country === 'Both' || t.country === userCountry
+    t => t.country === 'Both' || t.country === selectedCountry
   );
 
   const categories = ['All', ...Array.from(new Set(countryTerms.map(t => t.category)))];
@@ -112,11 +116,33 @@ export function Glossary() {
             <BookOpen color="var(--color-primary)" /> Civic Glossary
           </h2>
           <p style={{ margin: 0, color: 'var(--color-text-light)', fontSize: '0.95rem' }}>
-            Detailed civic terms and acronyms for <strong>{userCountry}</strong>.
+            Detailed civic terms and acronyms for <strong>{selectedCountry}</strong>.
           </p>
         </div>
-        <div style={{ padding: '0.45rem 1rem', borderRadius: '20px', backgroundColor: '#eef2ff', color: 'var(--color-primary)', display: 'flex', alignItems: 'center', gap: '0.35rem', fontWeight: 600, fontSize: '0.85rem' }}>
-          <Globe size={16} /> {userCountry} Edition
+        <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
+          <span style={{ fontSize: '0.875rem', fontWeight: 500, color: 'var(--color-text)' }}>Country:</span>
+          <select
+            value={selectedCountry}
+            onChange={(e) => {
+              setSelectedCountry(e.target.value as any);
+              setActiveCategory('All');
+              setSearchTerm('');
+            }}
+            style={{
+              padding: '0.45rem 0.75rem',
+              borderRadius: '20px',
+              border: '1px solid var(--color-border)',
+              backgroundColor: '#fff',
+              fontSize: '0.85rem',
+              fontWeight: 500,
+              color: 'var(--color-text)',
+              cursor: 'pointer',
+              outline: 'none'
+            }}
+          >
+            <option value="India">India</option>
+            <option value="United States">United States</option>
+          </select>
         </div>
       </div>
 
@@ -125,7 +151,7 @@ export function Glossary() {
           <Search size={18} style={{ position: 'absolute', left: '12px', top: '14px', color: 'var(--color-text-light)' }} />
           <input
             type="text"
-            placeholder={`Search terms or definitions for ${userCountry}...`}
+            placeholder={`Search terms or definitions for ${selectedCountry}...`}
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
             style={{
