@@ -1,5 +1,6 @@
+import React, { useState } from 'react';
 import { useAuth } from '../context/AuthContext';
-import { Compass, CheckCircle2, Globe, MapPin } from 'lucide-react';
+import { Compass, CheckCircle2, MapPin, Search } from 'lucide-react';
 
 interface JourneyStep {
   id: string;
@@ -45,7 +46,7 @@ const INDIA_STEPS: JourneyStep[] = [
     title: 'Voting at the Polling Booth',
     description: 'Voters visit their assigned polling booth in India. Officers check voter IDs (Voter ID, Aadhaar, Passport) and issue a printed VVPAT slip upon button press.',
     action: 'Locate your booth on the map, bring your valid ID, and vote.',
-    link: 'https://voterportal.eci.gov.in',
+    link: 'https://voters.eci.gov.in',
     linkText: 'Locate Polling Station'
   },
   {
@@ -109,22 +110,66 @@ const USA_STEPS: JourneyStep[] = [
 
 export function Journey() {
   const { user } = useAuth();
-  const country = user?.country || 'India';
-  const steps = country === 'United States' ? USA_STEPS : INDIA_STEPS;
+  
+  // Dynamic switch option right in UI state
+  const [selectedCountry, setSelectedCountry] = useState<'India' | 'United States'>(
+    (user?.country as 'India' | 'United States') || 'India'
+  );
+  
+  // Interactive Map search parameters
+  const [mapQuery, setMapQuery] = useState('');
+  const [mapUrl, setMapUrl] = useState<string>('');
+
+  const steps = selectedCountry === 'United States' ? USA_STEPS : INDIA_STEPS;
+
+  // Default coordinate iframes
+  const defaultUsIframe = "https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d158858.18237072528!2d-77.0365298!3d38.8951100!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x89b7c6de5af6e45b%3A0xc2524522d4885d2a!2sWashington%2C%20DC!5e0!3m2!1sen!2sus!4v1714545367200";
+  const defaultInIframe = "https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3887.9255866761047!2d77.5921869!3d12.9715987!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3bae167098e98327%3A0x6e2f69e6b7f9ca1e!2sVidhana%20Soudha!5e0!3m2!1sen!2sin!4v1714545564800";
+
+  const handleSearch = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!mapQuery.trim()) return;
+    const query = encodeURIComponent(mapQuery);
+    setMapUrl(`https://maps.google.com/maps?q=${query}&t=&z=13&ie=UTF8&iwloc=&output=embed`);
+  };
+
+  const activeMapSource = mapUrl || (selectedCountry === 'United States' ? defaultUsIframe : defaultInIframe);
 
   return (
     <div className="card" style={{ maxWidth: '950px', margin: '2rem auto', padding: '2.5rem' }}>
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', borderBottom: '1px solid var(--color-border)', paddingBottom: '1.25rem', marginBottom: '2rem', flexWrap: 'wrap', gap: '1rem' }}>
         <div>
           <h2 style={{ margin: '0 0 0.25rem 0', display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
-            <Compass color="var(--color-primary)" /> {country} Election Journey Timeline
+            <Compass color="var(--color-primary)" /> {selectedCountry} Election Journey Timeline
           </h2>
           <p style={{ margin: 0, color: 'var(--color-text-light)', fontSize: '0.95rem' }}>
-            Personalized view for citizens of <strong>{country}</strong>. All dates, guidelines, and steps are derived from official sources.
+            Dynamic country timeline with search-enabled polling booth mapping support.
           </p>
         </div>
-        <div style={{ padding: '0.45rem 1rem', borderRadius: '20px', backgroundColor: '#eef2ff', color: 'var(--color-primary)', display: 'flex', alignItems: 'center', gap: '0.35rem', fontWeight: 600, fontSize: '0.85rem' }}>
-          <Globe size={16} /> {country} Edition
+        <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
+          <span style={{ fontSize: '0.875rem', fontWeight: 500, color: 'var(--color-text)' }}>Country:</span>
+          <select
+            value={selectedCountry}
+            onChange={(e) => {
+              setSelectedCountry(e.target.value as any);
+              setMapUrl('');
+              setMapQuery('');
+            }}
+            style={{
+              padding: '0.45rem 0.75rem',
+              borderRadius: '20px',
+              border: '1px solid var(--color-border)',
+              backgroundColor: '#fff',
+              fontSize: '0.85rem',
+              fontWeight: 500,
+              color: 'var(--color-text)',
+              cursor: 'pointer',
+              outline: 'none'
+            }}
+          >
+            <option value="India">India</option>
+            <option value="United States">United States</option>
+          </select>
         </div>
       </div>
 
@@ -192,15 +237,34 @@ export function Journey() {
               <MapPin color="var(--color-primary)" size={20} /> Local Polling Booth Map
             </h3>
             <p style={{ margin: 0, fontSize: '0.85rem', color: 'var(--color-text-light)' }}>
-              Locate polling places, regional election offices, or centers in your community.
+              Locate polling places, regional election offices, or search specifically for an address.
             </p>
           </div>
+
+          <form onSubmit={handleSearch} style={{ display: 'flex', gap: '0.5rem' }}>
+            <div style={{ position: 'relative', flex: 1 }}>
+              <Search size={16} style={{ position: 'absolute', left: '10px', top: '12px', color: 'var(--color-text-light)' }} />
+              <input
+                type="text"
+                placeholder="Search polling booth/address..."
+                value={mapQuery}
+                onChange={(e) => setMapQuery(e.target.value)}
+                style={{
+                  width: '100%',
+                  padding: '0.6rem 0.6rem 0.6rem 2.25rem',
+                  borderRadius: '6px',
+                  border: '1px solid var(--color-border)',
+                  fontSize: '0.85rem',
+                  outline: 'none'
+                }}
+              />
+            </div>
+            <button type="submit" className="btn btn-primary" style={{ padding: '0.6rem 1rem', fontSize: '0.85rem' }}>Search</button>
+          </form>
+
           <div style={{ width: '100%', height: '400px', backgroundColor: '#e2e8f0', borderRadius: '8px', overflow: 'hidden', position: 'relative' }}>
             <iframe
-              src={country === 'United States'
-                ? "https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d158858.18237072528!2d-77.0365298!3d38.8951100!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x89b7c6de5af6e45b%3A0xc2524522d4885d2a!2sWashington%2C%20DC!5e0!3m2!1sen!2sus!4v1714545367200"
-                : "https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3887.9255866761047!2d77.5921869!3d12.9715987!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3bae167098e98327%3A0x6e2f69e6b7f9ca1e!2sVidhana%20Soudha!5e0!3m2!1sen!2sin!4v1714545564800"
-              }
+              src={activeMapSource}
               width="100%"
               height="100%"
               style={{ border: 0 }}
