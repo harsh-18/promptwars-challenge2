@@ -241,12 +241,13 @@ export function Journey() {
             </p>
           </div>
 
-          <form onSubmit={handleSearch} style={{ display: 'flex', gap: '0.5rem' }}>
+          <form onSubmit={handleSearch} style={{ display: 'flex', gap: '0.5rem' }} role="search" aria-label="Polling booth search">
             <div style={{ position: 'relative', flex: 1 }}>
               <Search size={16} style={{ position: 'absolute', left: '10px', top: '12px', color: 'var(--color-text-light)' }} />
               <input
                 type="text"
                 placeholder="Search polling booth/address..."
+                aria-label="Enter your street address or polling location to search the map"
                 value={mapQuery}
                 onChange={(e) => setMapQuery(e.target.value)}
                 style={{
@@ -259,10 +260,10 @@ export function Journey() {
                 }}
               />
             </div>
-            <button type="submit" className="btn btn-primary" style={{ padding: '0.6rem 1rem', fontSize: '0.85rem' }}>Search</button>
+            <button type="submit" aria-label="Search map location" className="btn btn-primary" style={{ padding: '0.6rem 1rem', fontSize: '0.85rem' }}>Search</button>
           </form>
 
-          <div style={{ width: '100%', height: '400px', backgroundColor: '#e2e8f0', borderRadius: '8px', overflow: 'hidden', position: 'relative' }}>
+          <div style={{ width: '100%', height: '400px', backgroundColor: '#e2e8f0', borderRadius: '8px', overflow: 'hidden', position: 'relative' }} role="application" aria-label="Interactive map displaying polling booth location">
             <iframe
               src={activeMapSource}
               width="100%"
@@ -271,6 +272,7 @@ export function Journey() {
               allowFullScreen
               loading="lazy"
               referrerPolicy="no-referrer-when-downgrade"
+              title="Interactive map of voter polling booth location"
             />
           </div>
           <div style={{ backgroundColor: '#fff', padding: '1rem', border: '1px solid var(--color-border)', borderRadius: '8px' }}>

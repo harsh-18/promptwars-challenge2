@@ -9,7 +9,8 @@ A neutral, citation-first election process assistant for voters, students, first
 - [4. Key Assumptions Made](#4-key-assumptions-made)
 - [5. Features](#5-features)
 - [6. Tech Stack](#6-tech-stack)
-- [7. Installation & Setup](#7-installation--setup)
+- [7. Security & Reliability](#7-security--reliability)
+- [8. Installation & Setup](#8-installation--setup)
 
 ---
 
@@ -61,7 +62,17 @@ CivicGuide approaches election education through **dynamic multi-jurisdiction pe
 
 ---
 
-## 7. Installation & Setup
+## 7. Security & Reliability
+- **Google Cloud Secret Manager**: Retrieves the `GEMINI_API_KEY` securely in the production container to prevent API key leakage.
+- **Google Cloud Logging**: Structured JSON logging ensures detailed backend tracking, error handling, and AI API call latencies are securely visible.
+- **Testing Suite**: Includes a complete **Vitest** test suite covering:
+  - Multi-jurisdiction timeline generation logic.
+  - Interactive country switching logic.
+  - Mocking AI responses for consistent integration testing.
+
+---
+
+## 8. Installation & Setup
 1. Clone the repository and navigate to the project directory:
    ```bash
    npm install --force
@@ -70,7 +81,11 @@ CivicGuide approaches election education through **dynamic multi-jurisdiction pe
    ```env
    GEMINI_API_KEY=your_actual_api_key_here
    ```
-3. Start the application locally:
+3. Run the automated test suite:
+   ```bash
+   npm run test
+   ```
+4. Start the application locally:
    ```bash
    npm run dev
    ```

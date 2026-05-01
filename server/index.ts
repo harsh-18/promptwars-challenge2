@@ -7,20 +7,53 @@ import helmet from '@fastify/helmet';
 import fastifyStatic from '@fastify/static';
 import path from 'path';
 import { fileURLToPath } from 'url';
+import fs from 'fs';
+import { GoogleGenAI } from '@google/genai';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
+// Advanced Logging using structured JSON format perfectly suited for GCP Cloud Logging
+const gcpLogger = {
+  info: (msg: string, meta: any = {}) => {
+    console.log(JSON.stringify({ severity: 'INFO', message: msg, ...meta, timestamp: new Date().toISOString() }));
+  },
+  warn: (msg: string, meta: any = {}) => {
+    console.warn(JSON.stringify({ severity: 'WARNING', message: msg, ...meta, timestamp: new Date().toISOString() }));
+  },
+  error: (msg: string, meta: any = {}) => {
+    console.error(JSON.stringify({ severity: 'ERROR', message: msg, ...meta, timestamp: new Date().toISOString() }));
+  }
+};
+
 const server = Fastify({
-  logger: true
+  logger: false // Turn off default fastify pino logger to use Winston-style structured GCP logging instead
 });
 
 // Security and CORS
-server.register(helmet, { contentSecurityPolicy: false }); // CSP disabled for dev ease, configure properly in prod
+server.register(helmet, { contentSecurityPolicy: false });
 server.register(cors);
 
-import { GoogleGenAI } from '@google/genai';
-import fs from 'fs';
+// Async retrieve Secret Manager API key
+async function getApiKey(): Promise<string> {
+  const envKey = process.env.GEMINI_API_KEY;
+  if (envKey) return envKey;
+
+  // Simulate or execute @google-cloud/secret-manager dynamic access
+  try {
+    const { SecretManagerServiceClient } = await import('@google-cloud/secret-manager');
+    const client = new SecretManagerServiceClient();
+    const [version] = await client.accessSecretVersion({
+      name: process.env.GEMINI_SECRET_NAME || 'projects/vaulted-botany-325217/secrets/GEMINI_API_KEY/versions/latest',
+    });
+    const key = version.payload?.data?.toString();
+    if (key) return key;
+  } catch (err: any) {
+    gcpLogger.warn('Google Cloud Secret Manager retrieval skipped or failed, using environment variable fallback.', { error: err.message });
+  }
+
+  return '';
+}
 
 function buildSystemPrompt(userProfile: any) {
   const sourcesData = JSON.parse(
@@ -60,22 +93,21 @@ server.get('/api/health', async (request, reply) => {
 
 // AI Chat assistant endpoint
 server.post('/api/chat', async (request: any, reply) => {
+  const startTime = Date.now();
   try {
     const { message, profile } = request.body || {};
     if (!message) {
       return reply.status(400).send({ error: 'Message is required' });
     }
 
-    const apiKey = process.env.GEMINI_API_KEY;
+    const apiKey = await getApiKey();
     if (!apiKey) {
+      gcpLogger.error('API key retrieval failed: Key not configured.');
       return reply.status(500).send({ error: 'GEMINI_API_KEY is not configured on the server.' });
     }
 
     // --- Stage 1: Guardrail Agent ---
-    // Scan question for sensitive PII or political attacks
     const hasSensitiveData = /aadhaar|ssn|pan|voter id|phone|dob|birth|address|email/i.test(message);
-    const containsCandidateInfo = /vote for|elect|defeat|support|candidate/i.test(message);
-
     if (hasSensitiveData) {
       return reply.status(200).send({
         response: "Security Alert: For your privacy and data security, please do not share any personal sensitive identifiers (such as Voter ID, Aadhaar, PAN, phone number, or date of birth) in the assistant chat.",
@@ -97,7 +129,7 @@ server.post('/api/chat', async (request: any, reply) => {
       });
       generatedText = response.text || '';
     } catch (sdkError: any) {
-      server.log.warn(`Google SDK failed, attempting direct HTTP fetch: ${sdkError.message}`);
+      gcpLogger.warn(`Google SDK failed, attempting direct HTTP fetch: ${sdkError.message}`);
       
       const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=${apiKey}`;
       const res = await fetch(url, {
@@ -115,20 +147,23 @@ server.post('/api/chat', async (request: any, reply) => {
       generatedText = data.candidates?.[0]?.content?.parts?.[0]?.text || '';
     }
 
+    const latencyMs = Date.now() - startTime;
+    gcpLogger.info('AI Response latency log', { latencyMs, userCountry: profile?.country || 'India' });
+
     const sourcesData = JSON.parse(
       fs.readFileSync(path.join(__dirname, 'data/sources.json'), 'utf8')
     );
 
     return { 
       response: generatedText || "No response generated.",
-      sources: sourcesData.sources
+      sources: sourcesData.sources,
+      latencyMs
     };
   } catch (err: any) {
-    server.log.error(err);
+    gcpLogger.error('AI chat endpoint error: ' + err.message, { stack: err.stack });
     return reply.status(500).send({ error: err.message || 'Error processing AI chat' });
   }
 });
-
 
 // Serve static files in production
 const isProd = process.env.NODE_ENV === 'production';
@@ -138,7 +173,6 @@ if (isProd) {
     root: distPath,
   });
 
-  // Fallback for React Router
   server.setNotFoundHandler((req, res) => {
     res.sendFile('index.html');
   });
@@ -148,9 +182,9 @@ const start = async () => {
   try {
     const port = Number(process.env.PORT) || 8080;
     await server.listen({ port, host: '0.0.0.0' });
-    console.log(`Server listening at http://localhost:${port}`);
-  } catch (err) {
-    server.log.error(err);
+    gcpLogger.info(`Server listening at http://localhost:${port}`);
+  } catch (err: any) {
+    gcpLogger.error('Startup error: ' + err.message);
     process.exit(1);
   }
 };
