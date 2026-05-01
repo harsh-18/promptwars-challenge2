@@ -26,6 +26,24 @@
       "topic": "Form 6 (New), Form 8 (Shift/Correction)",
       "trustLevel": "official",
       "lastVerified": "2026-05-01"
+    },
+    {
+      "id": "usa_gov",
+      "title": "USA.gov Voting and Elections",
+      "url": "https://www.usa.gov/voting",
+      "jurisdiction": "United States",
+      "topic": "General Voting and Registration info",
+      "trustLevel": "official",
+      "lastVerified": "2026-05-01"
+    },
+    {
+      "id": "vote_gov",
+      "title": "Vote.gov",
+      "url": "https://vote.gov/",
+      "jurisdiction": "United States",
+      "topic": "Direct voter registration for each US state",
+      "trustLevel": "official",
+      "lastVerified": "2026-05-01"
     }
   ]
 }

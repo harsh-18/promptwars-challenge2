@@ -22,29 +22,30 @@ server.register(cors);
 import { GoogleGenAI } from '@google/genai';
 import fs from 'fs';
 
-// Helper to construct AI prompt with official sources
 function buildSystemPrompt(userProfile: any) {
   const sourcesData = JSON.parse(
     fs.readFileSync(path.join(__dirname, 'data/sources.json'), 'utf8')
   );
 
-  let p = `You are CivicGuide AI, a nonpartisan, highly accurate civic education assistant grounded in official source data.\n`;
+  const country = userProfile?.country || 'India';
+
+  let p = `You are CivicGuide AI, a nonpartisan, highly accurate civic education assistant grounded in official source data specifically for citizens of ${country}.\n`;
   p += `Here are the official source websites we rely on:\n`;
   
   sourcesData.sources.forEach((s: any) => {
-    p += `- ${s.title}: ${s.url} (Topic: ${s.topic})\n`;
+    p += `- ${s.title}: ${s.url} (Topic: ${s.topic}, Jurisdiction: ${s.jurisdiction})\n`;
   });
 
   if (userProfile) {
-    p += `\nThe user is from the state/UT: ${userProfile.state || 'India'}. `;
+    p += `\nThe user is from the state/region: ${userProfile.state || country}. `;
     p += `Age group: ${userProfile.ageGroup || 'General'}. `;
     if (userProfile.firstTimeVoter) p += `They are a first-time voter. `;
     if (userProfile.movedRecently) p += `They moved recently. `;
-    p += `Use these user parameters to customize your response without exposing any sensitive PII.`;
+    p += `Customize your response exactly for the context of ${country} and their state/region without exposing any sensitive PII.`;
   }
 
   p += `\nGuidelines for your response:\n`;
-  p += `1. Provide specific, concise answers about the voting process.\n`;
+  p += `1. Provide specific, concise answers about the voting process in ${country}.\n`;
   p += `2. Always cite the appropriate source from above if relevant.\n`;
   p += `3. Only refer to official processes and ignore speculation or unofficial procedures.\n`;
   p += `4. Be professional and encouraging. Keep it short and readable.\n`;

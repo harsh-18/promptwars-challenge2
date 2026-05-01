@@ -76,7 +76,7 @@ const USA_STEPS: JourneyStep[] = [
     title: 'Requesting Mail-in Ballots',
     description: 'Voters can request an absentee ballot or review regional early voting dates to cast their vote prior to Election Day in person.',
     action: 'Verify your absentee/early voting deadlines.',
-    link: 'https://www.vote.org/absentee-ballot/',
+    link: 'https://www.usa.gov/absentee-voting',
     linkText: 'Check Absentee Status'
   },
   {
@@ -85,7 +85,7 @@ const USA_STEPS: JourneyStep[] = [
     title: 'Review Local Ballots',
     description: 'Voters prepare by downloading sample local ballots to understand current candidates, state initiatives, and down-ballot contests.',
     action: 'Download sample ballot and research local proposals.',
-    link: 'https://ballotpedia.org',
+    link: 'https://www.usa.gov/voter-research',
     linkText: 'Research Ballot Details'
   },
   {
@@ -94,8 +94,8 @@ const USA_STEPS: JourneyStep[] = [
     title: 'Casting Your Ballot',
     description: 'Citizens vote at assigned local polling places. Valid state forms of identification must be presented in states where ID is required.',
     action: 'Locate your voting site on the map and cast your vote.',
-    link: 'https://www.vote.org/polling-place-locator/',
-    linkText: 'Find Your Polling Site'
+    link: 'https://www.usa.gov/confirm-voter-registration',
+    linkText: 'Confirm Your Voter Status'
   },
   {
     id: 'us5',
