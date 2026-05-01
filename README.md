@@ -1,26 +1,76 @@
-# CivicGuide
+# CivicGuide - Election Process Education Platform
 
-A neutral, citation-first election process assistant for voters, students, first-time voters, and citizens who want to understand election workflows clearly. Built for PromptWars Challenge 2.
+A neutral, citation-first election process assistant for voters, students, first-time voters, and citizens to understand election workflows clearly. Built for **Google PromptWars Virtual 2026 - Challenge 2**.
 
-## License
-Apache License 2.0
+## Table of Contents
+- [1. Chosen Vertical](#1-chosen-vertical)
+- [2. Approach and Logic](#2-approach-and-logic)
+- [3. How the Solution Works](#3-how-the-solution-works)
+- [4. Key Assumptions Made](#4-key-assumptions-made)
+- [5. Features](#5-features)
+- [6. Tech Stack](#6-tech-stack)
+- [7. Installation & Setup](#7-installation--setup)
 
-## Features
-- Guided Intake
-- Election Journey Map
-- Personalized Timeline
-- Ask Assistant (Powered by Gemini 2.5 Flash)
-- Glossary & Quiz
+---
 
-## Tech Stack
-- Frontend: React + TypeScript + Vite
-- Backend: Fastify + TypeScript (Node.js)
-- AI: Google Gemini API
+## 1. Chosen Vertical
+**Challenge 2 - Election Process Education**  
+*Objective:* Create an assistant that helps users understand the election process, timelines, and steps in an interactive and easy-to-follow way.
 
-## Setup Instructions
-1. Run `npm install`
-2. Copy `.env.example` to `.env` and add your Gemini API key.
-3. Run `npm run dev` to start the frontend and backend concurrently.
+---
 
-## Deployment
-This app is designed to be deployed on Google Cloud Run. The backend serves the Vite built static assets in production.
+## 2. Approach and Logic
+CivicGuide approaches election education through **dynamic multi-jurisdiction personalization** and **reliable, nonpartisan AI grounding**.
+
+- **Localization First:** Instead of providing static, generic election information, the platform prompts the user for their country of residence, state, first-time voter status, and recent address changes.
+- **Dual-Jurisdiction Coverage:** It perfectly adapts its entire interface, timelines, glossary, quiz, and AI assistant to either **India** or the **United States**.
+- **Official Grounding:** AI responses from Google Gemini are dynamically steered by trusted, nonpartisan local databases (ECI for India and USA.gov / Vote.gov for the USA) to strictly avoid bias, political recommendations, or obsolete URLs.
+
+---
+
+## 3. How the Solution Works
+1. **Guided Intake Form:** Gathers basic non-PII details (Country, State/UT, first-time voter status, address changes, age group).
+2. **Dynamic Dashboard & Timeline:** Generates a personalized checklist outlining the upcoming exact steps (registering, shifting address, ID requirements, polling day prep).
+3. **Continuous Election Timeline:** Offers a dynamic, scrollable timeline with complete maps and an interactive polling booth search box.
+4. **Interactive Civic Glossary & Quiz:** Empowers users to learn key democratic terms and test their knowledge with localized questions.
+5. **Smart AI Assistant:** Users can ask the AI questions in a direct conversation. It reads the user’s selected country and returns highly localized, nonpartisan answers grounded in official sources.
+
+---
+
+## 4. Key Assumptions Made
+- **Neutrality:** The assistant assumes users require purely factual, operational guidance on *how* to vote and *when* to register, strictly avoiding any political or candidate bias.
+- **Official URLs:** Assumes current official domains (e.g., `voters.eci.gov.in` and `vote.gov`) remain the authoritative entry points for registration.
+- **Dynamic Session Mode:** In-memory local user sessions (persisted via LocalStorage) allow any visitor to instantly switch their country profile directly within the UI on-the-fly.
+
+---
+
+## 5. Features
+- Multi-state/UT/Region guided intake
+- Cross-country toggle directly from the header
+- Polling booth interactive map search
+- Contextual, dual-jurisdiction glossary and quiz
+- Grounded Gemini AI assistant with direct country injection
+
+---
+
+## 6. Tech Stack
+- **Frontend:** React + TypeScript + Vite + Vanilla CSS
+- **Backend:** Fastify + TypeScript (Node.js)
+- **AI Integration:** Google GenAI SDK (Gemini 2.5 Flash)
+- **Deployment:** Google Cloud Build + Google Cloud Run
+
+---
+
+## 7. Installation & Setup
+1. Clone the repository and navigate to the project directory:
+   ```bash
+   npm install --force
+   ```
+2. Create a `.env` file in the root directory and add your Gemini API key:
+   ```env
+   GEMINI_API_KEY=your_actual_api_key_here
+   ```
+3. Start the application locally:
+   ```bash
+   npm run dev
+   ```
