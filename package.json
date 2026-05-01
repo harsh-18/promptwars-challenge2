@@ -1,0 +1,47 @@
+{
+  "name": "civicguide",
+  "private": true,
+  "version": "1.0.0",
+  "type": "module",
+  "scripts": {
+    "dev:ui": "vite",
+    "dev:api": "tsx watch server/index.ts",
+    "dev": "concurrently \"npm run dev:api\" \"npm run dev:ui\"",
+    "build:ui": "tsc -b && vite build",
+    "build:api": "tsc --project tsconfig.server.json",
+    "build": "npm run build:ui && npm run build:api",
+    "start": "node dist-server/index.js",
+    "lint": "eslint .",
+    "test": "vitest"
+  },
+  "dependencies": {
+    "@fastify/cors": "^8.3.0",
+    "@fastify/helmet": "^11.1.1",
+    "@fastify/static": "^6.10.2",
+    "@google/genai": "latest",
+    "dotenv": "^16.4.5",
+    "fastify": "^4.28.1",
+    "lucide-react": "^0.378.0",
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0",
+    "react-router-dom": "^6.23.0",
+    "zod": "^3.23.6"
+  },
+  "devDependencies": {
+    "@types/node": "^20.12.11",
+    "@types/react": "^18.2.66",
+    "@types/react-dom": "^18.2.22",
+    "@typescript-eslint/eslint-plugin": "^7.2.0",
+    "@typescript-eslint/parser": "^7.2.0",
+    "@vitejs/plugin-react": "^4.2.1",
+    "concurrently": "^8.2.2",
+    "eslint": "^8.57.0",
+    "eslint-plugin-react-hooks": "^4.6.0",
+    "eslint-plugin-react-refresh": "^0.4.6",
+    "ts-node": "^10.9.2",
+    "tsx": "^4.10.0",
+    "typescript": "^5.2.2",
+    "vite": "^5.4.1",
+    "vitest": "^1.6.0"
+  }
+}

@@ -1,0 +1,31 @@
+{
+  "sources": [
+    {
+      "id": "eci_main",
+      "title": "Election Commission of India",
+      "url": "https://eci.gov.in/",
+      "jurisdiction": "India",
+      "topic": "General Election Information",
+      "trustLevel": "official",
+      "lastVerified": "2026-05-01"
+    },
+    {
+      "id": "eci_voters",
+      "title": "Voter Services Portal",
+      "url": "https://voters.eci.gov.in/",
+      "jurisdiction": "India",
+      "topic": "Voter Registration, Roll Search, e-EPIC",
+      "trustLevel": "official",
+      "lastVerified": "2026-05-01"
+    },
+    {
+      "id": "eci_forms",
+      "title": "Voter Forms",
+      "url": "https://voters.eci.gov.in/Home/Forms",
+      "jurisdiction": "India",
+      "topic": "Form 6 (New), Form 8 (Shift/Correction)",
+      "trustLevel": "official",
+      "lastVerified": "2026-05-01"
+    }
+  ]
+}
