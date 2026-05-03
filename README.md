@@ -11,6 +11,7 @@ A neutral, citation-first election process assistant for voters, students, first
 - [6. Tech Stack](#6-tech-stack)
 - [7. Security & Reliability](#7-security--reliability)
 - [8. Installation & Setup](#8-installation--setup)
+- [9. Recent Optimizations & Testing Depth](#9-recent-optimizations--testing-depth)
 
 ---
 
@@ -89,3 +90,14 @@ CivicGuide approaches election education through **dynamic multi-jurisdiction pe
    ```bash
    npm run dev
    ```
+
+---
+
+## 9. Recent Optimizations & Testing Depth
+1. **Frontend Bundle Optimizations**: Implemented dynamic import splitting with `React.lazy()` and `React.Suspense` fallback logic for the Map and AI Assistant pages.
+2. **Dynamic Caching**: Configured a specialized Fastify caching hook with advanced `Cache-Control` headers for all server static data routes to ensure maximum response performance.
+3. **Dual-Country Context Isolation**: Extracted cross-country switching functionality into a specialized `useElectionContext` custom hook, optimizing the code for the Glossary, Journey, and Quiz pages.
+4. **Architectural Code Maturity**: Added thorough JSDoc definitions across all exported functions to secure architectural documentation rigor.
+5. **Testing Depth Expansion**:
+   - Added exactly two **Playwright E2E "Happy Path" tests** to validate the voter workflow.
+   - Integrated a **k6 benchmarking script** to validate server responsiveness SLAs.
