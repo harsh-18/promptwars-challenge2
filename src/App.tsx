@@ -7,14 +7,15 @@ import { Footer } from './components/Footer';
 // Pages
 import { Dashboard } from './pages/Dashboard';
 import { GuidedIntake } from './pages/GuidedIntake';
-import { AskAssistant } from './pages/AskAssistant';
 import { Timeline } from './pages/Timeline';
 import { Glossary } from './pages/Glossary';
 import { Trust } from './pages/Trust';
-import { Journey } from './pages/Journey';
 import { Quiz } from './pages/Quiz';
 import { Login } from './pages/Login';
 import { Profile } from './pages/Profile';
+
+const AskAssistant = React.lazy(() => import('./pages/AskAssistant').then(module => ({ default: module.AskAssistant })));
+const Journey = React.lazy(() => import('./pages/Journey').then(module => ({ default: module.Journey })));
 
 function ProtectedRoute({ children }: { children: React.ReactNode }) {
   const { user } = useAuth();
@@ -36,8 +37,8 @@ function App() {
             
             {/* Direct protected pages requiring login first to secure voter info */}
             <Route path="/intake" element={<ProtectedRoute><GuidedIntake /></ProtectedRoute>} />
-            <Route path="/assistant" element={<ProtectedRoute><AskAssistant /></ProtectedRoute>} />
-            <Route path="/journey" element={<ProtectedRoute><Journey /></ProtectedRoute>} />
+            <Route path="/assistant" element={<ProtectedRoute><React.Suspense fallback={<div>Loading...</div>}><AskAssistant /></React.Suspense></ProtectedRoute>} />
+            <Route path="/journey" element={<ProtectedRoute><React.Suspense fallback={<div>Loading...</div>}><Journey /></React.Suspense></ProtectedRoute>} />
             <Route path="/timeline" element={<ProtectedRoute><Timeline /></ProtectedRoute>} />
             <Route path="/profile" element={<ProtectedRoute><Profile /></ProtectedRoute>} />
 

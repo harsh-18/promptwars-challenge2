@@ -34,13 +34,26 @@ const server = Fastify({
 server.register(helmet, { contentSecurityPolicy: false });
 server.register(cors);
 
-// Async retrieve Secret Manager API key
+// Optimize Cache-Control headers for static civic data and GET requests
+server.addHook('onRequest', async (request, reply) => {
+  if (request.method === 'GET') {
+    reply.header('Cache-Control', 'public, max-age=3600, stale-while-revalidate=86400');
+  }
+});
+
+/**
+ * Asynchronously retrieves the Google Gemini API key from the environment
+ * or the Google Cloud Secret Manager.
+ * 
+ * @returns {Promise<string>} The API key as a string.
+ */
 async function getApiKey(): Promise<string> {
   const envKey = process.env.GEMINI_API_KEY;
   if (envKey) return envKey;
 
   // Simulate or execute @google-cloud/secret-manager dynamic access
   try {
+    // @ts-ignore
     const { SecretManagerServiceClient } = await import('@google-cloud/secret-manager');
     const client = new SecretManagerServiceClient();
     const [version] = await client.accessSecretVersion({
@@ -55,6 +68,13 @@ async function getApiKey(): Promise<string> {
   return '';
 }
 
+/**
+ * Dynamically builds a system prompt for the Gemini AI generation based on
+ * the nonpartisan civic sources and custom user profile parameters.
+ * 
+ * @param {any} userProfile The user profile containing demographic data.
+ * @returns {string} The customized system prompt string.
+ */
 function buildSystemPrompt(userProfile: any) {
   const sourcesData = JSON.parse(
     fs.readFileSync(path.join(__dirname, 'data/sources.json'), 'utf8')

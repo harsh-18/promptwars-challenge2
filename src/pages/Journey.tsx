@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { useAuth } from '../context/AuthContext';
+import { useElectionContext } from '../context/ElectionContext';
 import { Compass, CheckCircle2, MapPin, Search } from 'lucide-react';
 
 interface JourneyStep {
@@ -108,13 +108,14 @@ const USA_STEPS: JourneyStep[] = [
   }
 ];
 
+/**
+ * The Journey component displays the election lifecycle and interactive map
+ * to let users search for polling booth locations based on their selected country.
+ * 
+ * @returns {React.ReactElement} The rendered election journey interface.
+ */
 export function Journey() {
-  const { user } = useAuth();
-  
-  // Dynamic switch option right in UI state
-  const [selectedCountry, setSelectedCountry] = useState<'India' | 'United States'>(
-    (user?.country as 'India' | 'United States') || 'India'
-  );
+  const { selectedCountry, setSelectedCountry } = useElectionContext();
   
   // Interactive Map search parameters
   const [mapQuery, setMapQuery] = useState('');

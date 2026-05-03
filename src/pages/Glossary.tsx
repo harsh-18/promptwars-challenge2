@@ -1,6 +1,6 @@
-import React, { useState } from 'react';
-import { useAuth } from '../context/AuthContext';
-import { Search, BookOpen, Globe } from 'lucide-react';
+import { useState } from 'react';
+import { Search, BookOpen } from 'lucide-react';
+import { useElectionContext } from '../context/ElectionContext';
 
 interface GlossaryTerm {
   id: string;
@@ -83,13 +83,14 @@ const ALL_TERMS: GlossaryTerm[] = [
   }
 ];
 
+/**
+ * The Glossary component renders a searchable and filterable database
+ * of civic and election terminology for the selected country context.
+ * 
+ * @returns {React.ReactElement} The rendered glossary interface.
+ */
 export function Glossary() {
-  const { user } = useAuth();
-  
-  // Dynamic override on state
-  const [selectedCountry, setSelectedCountry] = useState<'India' | 'United States'>(
-    (user?.country as 'India' | 'United States') || 'India'
-  );
+  const { selectedCountry, setSelectedCountry } = useElectionContext();
 
   const [searchTerm, setSearchTerm] = useState('');
   const [activeCategory, setActiveCategory] = useState('All');

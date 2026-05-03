@@ -1,6 +1,6 @@
-import React, { useState } from 'react';
-import { useAuth } from '../context/AuthContext';
-import { HelpCircle, RefreshCw, CheckCircle, XCircle, Globe } from 'lucide-react';
+import { useState } from 'react';
+import { useElectionContext } from '../context/ElectionContext';
+import { HelpCircle, RefreshCw, CheckCircle, XCircle } from 'lucide-react';
 
 interface Question {
   id: number;
@@ -67,13 +67,14 @@ const QUIZ_QUESTIONS: Question[] = [
   }
 ];
 
+/**
+ * The Quiz component presents civic knowledge assessment questions
+ * tailored to the selected country's electoral system.
+ * 
+ * @returns {React.ReactElement} The rendered quiz interface.
+ */
 export function Quiz() {
-  const { user } = useAuth();
-
-  // Dynamic country select
-  const [selectedCountry, setSelectedCountry] = useState<'India' | 'United States'>(
-    (user?.country as 'India' | 'United States') || 'India'
-  );
+  const { selectedCountry, setSelectedCountry } = useElectionContext();
 
   const [currentQuestion, setCurrentQuestion] = useState(0);
   const [selectedOption, setSelectedOption] = useState<string | null>(null);
